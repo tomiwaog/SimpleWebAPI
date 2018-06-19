@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tom's Web</title>
+</head>
+<body>
+	<h1>ISBN LookUp</h1>
+	<input id="myisbnsearch" type="text"></input>
+
+	<script>
+function bbc(){
+	//var url = 'http://ec2-18-220-153-61.us-east-2.compute.amazonaws.com:2491/process/?question=what%20is%20the%20rig%20of%20BD06';
+	var url ='http://bnb.data.bl.uk/doc/resource/007446989.json';
+	return fetch(url)
+		.then(res=>{
+		    return res.json();
+		  }).then(val=>{
+		   // return val;
+		    console.log(val);
+		    //context.variables.answer = val['description'];		    
+		    //return "Result is "+context.variables.answer;
+		    document.write(val.result.primaryTopic.title);
+		    
+		    
+		  })
+}	  
+function googlebooks(){
+	var isbn = document.getElementById('myisbnsearch').value;
+
+	if(!isNaN(parseFloat(isbn)) && isFinite(isbn)){
+	var url ='https://www.googleapis.com/books/v1/volumes?q=isbn:9780545596275';
+	var url ='https://www.googleapis.com/books/v1/volumes?q=isbn:'+isbn;
+	return fetch(url)
+		.then(res=>{
+		    return res.json();
+		  }).then(val=>{
+		   // return val;
+		    console.log(val);
+		    //context.variables.answer = val['description'];		    
+		    //return "Result is "+context.variables.answer;
+		    var imageUrl = val.items[0].volumeInfo['imageLinks'].thumbnail;
+		    var imageFile='<img src="'+imageUrl+'" />';
+		    var result = imageFile+"\n\n\nTitle: "+val.items[0].volumeInfo['title']+ " ("+val.items[0].volumeInfo['publishedDate']+")\n"+
+		    " | Description: "+val.items[0].volumeInfo['description'];
+		    document.write(result);
+		  })
+	}
+	document.write("Invalid ISBN Entered!")
+}
+
+
+function bbc2(){
+	//Works
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", "http://bnb.data.bl.uk/doc/resource/007446989.json", false);
+	xhr.send();
+	var result = xhr.responseText
+	document.write(result);
+}	
+</script>
+
+
+
+	<p id="demo">Just another paragraph</p>
+	<button type="button" onclick="googlebooks()">Run Script</button>
+</body>
+</html>
